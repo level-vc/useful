@@ -1,0 +1,46 @@
+repos:
+-   repo: local
+    hooks:
+    -   id: pytest
+        name: pytest
+        entry: make test-prepush
+        language: system
+        stages: [push]
+
+-   repo: https://github.com/commitizen-tools/commitizen
+    rev: v2.17.13
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.1.4
+  hooks:
+    - id: ruff
+      args: [--fix]
+    - id: ruff-format
+      stages: [commit]
+
+-   repo: https://github.com/fpgmaas/deptry.git
+    rev: 0.8.0
+    hooks:
+      - id: deptry
+        stages: [push]
+
+-   repo: https://github.com/streetsidesoftware/cspell-cli
+    rev: v8.0.0
+    hooks:
+      - id: cspell
+        stages: [commit]
+
+-   repo: https://github.com/python-poetry/poetry
+    rev: 1.7.1
+    hooks:
+    -   id: poetry-check
+        stages: [push]
+
+    -   id: poetry-lock
+        stages: [push]
+
+    -   id: poetry-install
+        stages: [push]

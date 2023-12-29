@@ -1,0 +1,8 @@
+{
+    "pylint.args": ["--disable=W"],
+    "python.testing.pytestArgs": ["test"],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.analysis.logLevel": "Information",
+    "python.analysis.typeCheckingMode": "off"
+}
