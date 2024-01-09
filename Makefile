@@ -32,3 +32,9 @@ deps:
 	poetry run deptry .
 
 check: test lint format deps
+
+docs:
+	poetry run pdoc --html useful --output docs
+
+docs-serve:
+	poetry run pdoc --http : useful

@@ -1,14 +1,56 @@
 # useful
 
-![ci workflow badge](https://github.com/level-vc/useful/actions/workflows/ci.yml/badge.svg?branch=main)
+![ci workflow badge](https://github.com/level-vc/useful-priv/actions/workflows/ci.yml/badge.svg?branch=develop)
 
-![useful](/logo.png)
+<img alt="useful-logo" src="./useful-machines-logo-large.png" width="60">
 
-This package provides the python SDK for useful machines.
+We created Useful to streamline ETL and data drift resolution without sacrificing deployment pace or spending time test writing.
+
+At a glimpse, Useful encompasses:
+
+- ***Anomaly detection on your Python code***
+- ***Automated ETL testing and notifications***
+- ***Observability across all code changes, argument changes, and workflows within your ETL***
+- ***Comparisons of new ETL developments against production runs***
+- ***… and much more***
+
+*All with one line of code.*
+
+Here’s how it works:
+
+1. Starting with a Python ETL, include Useful checks in your code with a simple decorator.
+
+   <img alt="Demonstration of Step 1" src="./Step 1.gif" width="800">
+
+2. Every time your code runs, Useful logs your functions' information, allowing you to observe each function's behavior through its interface.
+
+   <img alt="Demonstration of Step 2" src="./Step 2.gif" width="800">
+
+3. Utilize the interface to explore statistics in depth, collaborate with your team to troubleshoot anomalous data, and save important statistics with bookmarks and notifications.
+
+   <img alt="Demonstration of Step 3" src="./Step 3.gif" width="800">
+
+Each Useful Check logs:
+
+1. Runtime statistics of the function
+2. Statistics of the function’s return, auto-adapting to the return dtype of the function
+3. Code and arguments fed to the function
+4. Where the function is within the traceback to define a bullet-proof function hierarchy
+5. Git information and workflow placement of jobs
+
+**users can disable any particular logging for a function.*
+
+Then, behind the scenes, thousands of statistics are processed every second to identify anomalies and share results in the Useful dashboard.
+
+Our simple Python integration combines with a 2024-ready UI that lets you easily see everything in your ETL and pin down critical data drift at scale.
+
+<img alt="Feature Snapshot" src="./Feature Snapshot.png" width="800">
+
+We take privacy very seriously. The data ingested into Useful is core to your business, and we treat it as such.
 
 ## Installation
 
-Currently, you can run
+To install Useful, you can run:
 
 ```bash
 poetry add useful-machines
@@ -18,59 +60,4 @@ poetry add useful-machines
 pip install useful-machines
 ```
 
-For the library to work successfully and to access the Useful tool, please enter the waitlist on usefulmachines.dev.
-
-## Development
-
-### First Time
-
-0. We use `git` as our version control system and Github as our source of truth.
-   Please install `git` and ensure you have access to the repository.
-
-1. We assume you have a way of managing python versions, e.g., [`pyenv`](https://github.com/pyenv/pyenv).
-   Please ensure that you have the python version located in `.python-version` installed.
-   If you use `pyenv`, you can run `pyenv install` to install the correct version.
-
-2. We use [`poetry`](https://python-poetry.org/) for dependency management.
-   Please install it.
-
-3. With those tools installed, please enter the project root and run:
-
-```bash
-make setup
-```
-
-### General
-
-When working on this project, you can activate the virtual environment with:
-
-```bash
-poetry shell
-```
-
-If you use VS Code as your IDE, you can set the python interpreter to the one in the virtual environment, which will enable several tools.
-
-### Tooling
-
-We use a variety of tools to ensure code quality and for build tasks like documentation.
-These types of tools are available in the `Makefile`; if you inspect that file, you can find the various commands available.
-We also use [`pre-commit`](https://pre-commit.com/) to run some of these tools automatically while using `git`; we have selected a pragmatic configuration that runs quick checks every time you commit and more thorough checks when you push.
-
-### Commit Process
-
-We use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages and require additional information within the body of a commit; please follow this format.
-The `.gitmessage` file contains a template for commit messages that should be automatically picked up by `git` after running `make setup`.
-To work on new code, please branch off of the `develop` branch and write code in a feature branch.
-Then, open a pull request to merge into `develop`.
-
-When merging the commit, ensure that:
-
--   you only have one commit; rebase and squash if necessary
--   your commit message has the proper format
--   your commit is signed
--   your commit passes all checks
--   your PR is approved
-
-### Troubleshooting
-
-If the tools are not running correctly, run `make setup` to set them up again.
+For the library to work successfully and to access the Useful tool, please reach out to us at <liam@levelvc.com>.

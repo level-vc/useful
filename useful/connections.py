@@ -5,6 +5,7 @@ import concurrent
 import logging
 from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures.process import BrokenProcessPool
+from typing import Dict, List, Union
 
 import nest_asyncio
 import requests
@@ -16,8 +17,8 @@ class Job(BaseModel):
 
     job: str
     job_timestamp: int
-    workflow_id: str | None
-    workflow_thread: list[str] | None
+    workflow_id: Union[str, None]
+    workflow_thread: Union[List[str], None]
 
 
 class FunctionError(BaseModel):
@@ -30,12 +31,12 @@ class FunctionData(BaseModel):
     """A representation of a function data."""
 
     arguments: str
-    number_of_return_arguments: int | None
-    code: str | None
-    line_start: int | None
-    git_url: str | None
-    blame: str | None
-    caller: str | None
+    number_of_return_arguments: Union[int, None]
+    code: Union[str, None]
+    line_start: Union[int, None]
+    git_url: Union[str, None]
+    blame: Union[str, None]
+    caller: Union[str, None]
 
 
 class Function(BaseModel):
@@ -46,8 +47,8 @@ class Function(BaseModel):
     job_timestamp: int
     finished_at: int
     started_at: int
-    error: FunctionError | None
-    data: FunctionData | None
+    error: Union[FunctionError, None]
+    data: Union[FunctionData, None]
 
 
 class Statistic(BaseModel):
@@ -56,8 +57,8 @@ class Statistic(BaseModel):
     job: str
     job_timestamp: int
     name: str
-    return_order: int | None
-    features: dict[str, dict[str, int | float | str]]
+    return_order: Union[int, None]
+    features: Dict[str, Dict[str, Union[int, float, str]]]
 
 
 # Enable multithreading inside multithreading like IPython kernel and parallel tasks
@@ -67,7 +68,7 @@ nest_asyncio.apply()
 class CloudLogger:
     """A class to log data to the cloud."""
 
-    API_ENDPOINT = "https://api.usefulmachines.dev/prod/upload"
+    API_ENDPOINT = "https://api.usefulmachines.dev/upload"
     MAX_CONCURRENCY = 10
 
     def __init__(self, api_key):

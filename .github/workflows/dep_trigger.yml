@@ -1,0 +1,17 @@
+name: Trigger DEP Docker Build
+on: 
+  push:
+    branches:
+      - main
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository Dispatch
+        env: 
+          TOKEN: ${{ secrets.GIT_SERVICE_PAT }}
+        run: |
+          curl -X POST https://api.github.com/repos/level-vc/data-engineering-pipelines/dispatches \
+          -H 'Accept: application/vnd.github.everest-preview+json' \
+          -H 'Authorization: token ${{ secrets.GIT_SERVICE_PAT }}' \
+          --data '{"event_type": "build_and_push_docker"}'  # event type should match the one in your target repo

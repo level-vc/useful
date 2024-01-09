@@ -37,7 +37,7 @@ class Useful:
 
     def __init__(  # noqa: PLR0913, PLR0915
         self,
-        job_name,
+        job_name=None,
         api_key=None,
         workflow_thread=None,
         block_uploads=False,
@@ -60,6 +60,11 @@ class Useful:
             ignore_execution_errors (bool): Whether to ignore execution errors or not.
         """
         # Initialization
+        job_name = (
+            job_name
+            if job_name
+            else inspect.stack()[1][0].f_code.co_filename.split("/")[-1].split(".")[0]
+        )
         # core identifiers of a Job
         self.start_timestamp = self.__get_current_micros()
         self.job = prefix + job_name + suffix
@@ -258,12 +263,6 @@ class Useful:
                 """Wrap the function."""
                 # get unique identifier for the call stack
                 safe_name_tag = name_tag if name_tag else func.__name__
-                hash_object = hashlib.md5(bytes(safe_name_tag, "utf-8"))  # noqa: S324
-
-                element_name = hash_object.hexdigest() + (
-                    "_pl" if parallel_runtime else ""
-                )
-                code = f"__{element_name}__t{str(self.__get_current_micros())}"
                 if parallel_runtime:
                     safe_name_tag += "_pl"
                 else:
@@ -275,6 +274,13 @@ class Useful:
                     self.seen_in_runtime.add(trial_name_tag)
                     safe_name_tag = trial_name_tag
 
+                hash_object = hashlib.md5(bytes(safe_name_tag, "utf-8"))  # noqa: S324
+
+                element_name = hash_object.hexdigest() + (
+                    "_pl" if parallel_runtime else ""
+                )
+                code = f"__{element_name}__t{str(self.__get_current_micros())}"
+
                 self.function_hash_to_name[
                     "__" + hash_object.hexdigest()
                 ] = safe_name_tag
@@ -284,13 +290,11 @@ class Useful:
                 # execute code within the callstack
                 # TODO: no need to recompute trace, just need better logic to boil it
                 # down (this may not be helpful after all)
-                trace_back_code = "".join(
-                    (
-                        "trace = traceback.format_list(traceback.extract_stack());",
-                        "indexes = [(i,x) for i,x in enumerate(trace)",
-                        "if 'useful_wrapper' in x]; hash_traces = [trace[i+1]",
-                        "for i,x in indexes];",
-                    )
+                trace_back_code = (
+                    "trace = traceback.format_list(traceback.extract_stack()); "
+                    "indexes = [(i,x) for i,x in enumerate(trace) "
+                    "if 'useful_wrapper' in x]; hash_traces = [trace[i+1] "
+                    "for i,x in indexes];"
                 )
                 exec(  # noqa: S102
                     f"""def quick_trace(): {trace_back_code} return hash_traces"""
@@ -300,6 +304,8 @@ class Useful:
                     for x in locals()["quick_trace"]() + [code]
                     if "__" in x
                 ]
+
+                logging.debug(f"[TRACE] {trace}")
 
                 logging.info(f"[TIME] start at: {self.__get_current_micros()}")
                 function_signature = self.thread_signature[:]
@@ -332,12 +338,10 @@ class Useful:
                 # [start] function log here
                 lines, code_line_start = inspect.getsourcelines(func)
 
-                execution_string = "".join(
-                    (
-                        f"def {code}(func, *args, **kwargs): ",
-                        f"{trace_back_code} return hash_traces, ",
-                        "func(*args, **kwargs)",
-                    )
+                execution_string = (
+                    f"def {code}(func, *args, **kwargs): "
+                    f"{trace_back_code} return hash_traces, "
+                    "func(*args, **kwargs)"
                 )
                 exec(execution_string)  # noqa: S102  # add in arguments here?
                 # error handing
