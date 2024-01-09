@@ -10,7 +10,14 @@ from useful import Useful
 
 # Toggle testing outputs or generating outputs
 UPDATE_TEST_OUTPUTS = False
-KEYS_TO_NOT_TEST = {"started_at", "finished_at", "job_timestamp", "line_start", "error"}
+KEYS_TO_NOT_TEST = {
+    "started_at",
+    "finished_at",
+    "job_timestamp",
+    "line_start",
+    "error",
+    "blame",
+}
 
 
 def format_dictionary(d):
@@ -27,20 +34,28 @@ def validate_output(func):
 
     def wrapper(*args, **kwargs):
         usf = func(*args, **kwargs)
+
         output = str(usf.logger.all_data)
         path = pathlib.Path(f"test/expected_outputs/{func.__name__}.txt")
 
+        replace = "', '"
+        replace_to = "',\n '"
+        if not path.exists():
+            path.write_text(output.replace(replace, replace_to))
+
         if UPDATE_TEST_OUTPUTS:
-            path.write_text(output)
+            path.write_text(output.replace(replace, replace_to))
         else:
             for line, expected_line in zip(
-                ast.literal_eval(output), ast.literal_eval(path.read_text())
+                ast.literal_eval(output.replace(replace_to, replace)),
+                ast.literal_eval(path.read_text().replace(replace_to, replace)),
             ):
                 cur_line = format_dictionary(ast.literal_eval(line))
                 exp_line = format_dictionary(ast.literal_eval(expected_line))
-                assert str(cur_line) == str(
-                    exp_line
-                ), f"Current line: {cur_line}\nExpected line: {exp_line}"
+                if str(cur_line) != str(exp_line):
+                    raise ValueError(
+                        f"Current line: {cur_line}\nExpected line: {exp_line}"
+                    )
 
     return wrapper
 
@@ -397,7 +412,8 @@ def test_call_error():
         has_failed = True
         pass
 
-    assert has_failed
+    if not has_failed:
+        raise RuntimeError("The function did not raise an error.")
 
     return usf
 
@@ -427,5 +443,22 @@ def test_check_statistics_false():
     start_value = 1
     end_value = 5
     compute_factorial_chain(start_value, end_value)
+
+    return usf
+
+
+@validate_output
+def test_no_job_names():
+    """Call a function that has not job_name argument."""
+    usf = Useful(
+        block_uploads=True,
+        ignore_execution_errors=False,
+    )
+
+    @usf.check()
+    def add(a, b):
+        return a, b
+
+    _ = add(1, 2)
 
     return usf

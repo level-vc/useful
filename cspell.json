@@ -10,5 +10,6 @@
     ],
     "dictionaries": ["custom-dictionary"],
     "words": [],
+    "ignoreWords": ["FAJKRD", "GTQV", "PRUQQP", "PSYR"],
     "import": []
 }

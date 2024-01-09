@@ -25,6 +25,7 @@ repos:
     rev: 0.8.0
     hooks:
       - id: deptry
+        args: ["--ignore", "DEP003"]
         stages: [push]
 
 -   repo: https://github.com/streetsidesoftware/cspell-cli
@@ -37,10 +38,6 @@ repos:
     rev: 1.7.1
     hooks:
     -   id: poetry-check
-        stages: [push]
-
     -   id: poetry-lock
-        stages: [push]
-
     -   id: poetry-install
         stages: [push]
