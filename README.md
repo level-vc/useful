@@ -1,8 +1,19 @@
 # useful
 
-![ci workflow badge](https://github.com/level-vc/useful-priv/actions/workflows/ci.yml/badge.svg?branch=develop)
+![ci workflow badge](https://github.com/level-vc/useful/actions/workflows/ci.yml/badge.svg?branch=main)
 
 <img alt="useful-logo" src="./useful-machines-logo-large.png" width="60">
+
+---
+
+We are building Useful to be adored by Python developers and modern data engineering teams.
+
+<img alt="Head-to-Head with Market Incumbents" src="./head-to-head.png" width="500">
+
+Useful is **very** different from market incumbents. And we have an exciting roadmap ahead…
+
+---
+But first:
 
 We created Useful to streamline ETL and data drift resolution without sacrificing deployment pace or spending time test writing.
 
